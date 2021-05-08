@@ -1,13 +1,10 @@
-
 import torch
 import os
 from torch.utils.cpp_extension import load
 
 
 f_path = os.path.dirname(__file__)
-cd = load(name="cd",
-          sources=[ f_path + '/chamfer_distance.cpp',
-                    f_path + '/chamfer_distance.cu'])
+cd = load(name="cd", sources=[f_path + "/chamfer_distance.cpp", f_path + "/chamfer_distance.cu"])
 
 
 class ChamferDistanceFunction(torch.autograd.Function):
@@ -37,7 +34,7 @@ class ChamferDistanceFunction(torch.autograd.Function):
         return dist1, dist2, idx1, idx2
 
     @staticmethod
-    def backward(ctx, graddist1, graddist2):
+    def backward(ctx, graddist1, graddist2, nogradidx1, nogradidx2):
         xyz1, xyz2, idx1, idx2 = ctx.saved_tensors
 
         graddist1 = graddist1.contiguous()
